@@ -1,24 +1,20 @@
 services:
   osticket:
-    image: osticket/osticket:latest
+    image: rinkp/osticket-dockerized:1.18.3
     container_name: osticket
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
     environment:
-      MYSQL_HOST: db
-      MYSQL_DATABASE: osticket
-      MYSQL_USER: osticket
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      INSTALL_NAME: "Home NOC Helpdesk"
-      INSTALL_EMAIL: helpdesk@example.com
-      INSTALL_SECRET: ${INSTALL_SECRET}
-      ADMIN_FIRSTNAME: NOC
-      ADMIN_LASTNAME: Admin
-      ADMIN_EMAIL: admin@example.com
-      ADMIN_USERNAME: noc-admin
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      OST_SECRET_SALT: ${INSTALL_SECRET}
+      OST_ADMIN_EMAIL: admin@example.com
+      OST_ADMIN_PASSWD: ${ADMIN_PASSWORD}
+      OST_HELPDESK_URL: http://192.168.1.10:8080/
+      OST_DBHOST: db:3306
+      OST_DBNAME: osticket
+      OST_DBUSER: osticket
+      OST_DBPASS: ${DB_PASSWORD}
     ports:
       - "192.168.1.10:8080:80"
 
