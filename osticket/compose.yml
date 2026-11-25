@@ -4,7 +4,21 @@ services:
     container_name: osticket
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: osticket
+      MYSQL_USER: osticket
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      INSTALL_NAME: "Home NOC Helpdesk"
+      INSTALL_EMAIL: helpdesk@example.com
+      INSTALL_SECRET: ${INSTALL_SECRET}
+      ADMIN_FIRSTNAME: NOC
+      ADMIN_LASTNAME: Admin
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_USERNAME: noc-admin
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     ports:
       - "192.168.1.10:8080:80"
 
@@ -17,5 +31,10 @@ services:
       MYSQL_DATABASE: osticket
       MYSQL_USER: osticket
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     volumes:
       - ./db:/var/lib/mysql
