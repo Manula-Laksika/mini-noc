@@ -1,0 +1,21 @@
+services:
+  osticket:
+    image: osticket/osticket:latest
+    container_name: osticket
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "192.168.1.10:8080:80"
+
+  db:
+    image: mariadb:10.11
+    container_name: osticket-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: osticket
+      MYSQL_USER: osticket
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./db:/var/lib/mysql
